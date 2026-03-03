@@ -3,6 +3,7 @@ import logo from "../assets/logo.png.jpeg";
 
 function Home() {
   const pricePerLiter = 50;
+  const appDownloadPath = "/hindupur-milk.apk";
 
   const [quantity, setQuantity] = useState(1);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -12,10 +13,9 @@ function Home() {
 
   const totalPrice = quantity * pricePerLiter;
 
-  // 📍 Get Live Location
   const getLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation not supported by your browser");
+      alert("Geolocation is not supported by your browser.");
       return;
     }
 
@@ -23,75 +23,71 @@ function Home() {
       (position) => {
         const coords = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
         setLocation(coords);
-        alert("Location captured successfully ✅");
+        alert("Location captured successfully.");
       },
       () => {
-        alert("Location permission denied ❌ Please allow location.");
+        alert("Location permission denied. Please allow location access.");
       }
     );
   };
 
-  // 🟢 Place Order
   const placeOrder = () => {
-    if (!name) {
-      alert("Please enter your name");
+    const trimmedName = name.trim();
+    const normalizedPhone = phone.replace(/\D/g, "");
+
+    if (!trimmedName) {
+      alert("Please enter your name.");
       return;
     }
 
-    if (!phone) {
-      alert("Please enter phone number");
+    if (normalizedPhone.length !== 10) {
+      alert("Please enter a valid 10-digit phone number.");
       return;
     }
 
     if (!location) {
-      alert("Please share live location");
+      alert("Please share your live location.");
       return;
     }
 
-    const message = `🥛 Hindupur Milk Order
-Name: ${name}
-Quantity: ${quantity} Liter
-Total: ₹${totalPrice}
-Customer Phone: ${phone}
-Location: ${location}`;
+    const message = [
+      "Hindupur Milk Order",
+      `Name: ${trimmedName}`,
+      `Quantity: ${quantity} Liter`,
+      `Total: Rs ${totalPrice}`,
+      `Customer Phone: ${normalizedPhone}`,
+      `Location: ${location}`,
+    ].join("\n");
 
-    const whatsappNumber = "919391126693"; // Owner Number with country code
+    const whatsappNumber = "918520818781";
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-100 to-green-100">
-
-      {/* NAVBAR */}
-      <nav className="flex justify-between items-center px-6 py-4 bg-white shadow-md">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="Hindupur Milk" className="w-12 h-12 rounded-full" />
-          <h1 className="text-xl font-bold text-green-700">Hindupur Milk</h1>
-        </div>
-      </nav>
-
-      {/* HERO */}
+    <>
       <section className="text-center py-12 px-4">
         <img src={logo} alt="Logo" className="mx-auto w-32 mb-6" />
         <h2 className="text-3xl md:text-4xl font-bold text-green-800">
-          Pure & Fresh Milk Delivered Daily 🥛
+          Pure and Fresh Milk Delivered Daily
         </h2>
         <p className="mt-4 text-gray-600 max-w-xl mx-auto">
           Fresh cow milk delivered directly to your home in Hindupur.
         </p>
+        <a
+          href={appDownloadPath}
+          download
+          className="inline-block mt-6 bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+        >
+          Download App
+        </a>
       </section>
 
-      {/* PRODUCT SECTION */}
       <section className="flex flex-col items-center py-10 px-4">
         <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md text-center">
-
           <h3 className="text-2xl font-semibold mb-2">Fresh Cow Milk</h3>
-          <p className="text-gray-600 mb-4">₹50 per Liter</p>
+          <p className="text-gray-600 mb-4">Rs 50 per Liter</p>
 
           {!showCheckout ? (
             <button
@@ -102,7 +98,6 @@ Location: ${location}`;
             </button>
           ) : (
             <>
-              {/* Quantity */}
               <div className="flex justify-center items-center gap-4 my-4">
                 <button
                   onClick={() => quantity > 1 && setQuantity(quantity - 1)}
@@ -121,11 +116,8 @@ Location: ${location}`;
                 </button>
               </div>
 
-              <p className="text-lg font-semibold mb-3">
-                Total: ₹{totalPrice}
-              </p>
+              <p className="text-lg font-semibold mb-3">Total: Rs {totalPrice}</p>
 
-              {/* Name */}
               <input
                 type="text"
                 placeholder="Enter Your Name"
@@ -134,7 +126,6 @@ Location: ${location}`;
                 className="w-full border p-2 rounded mb-3"
               />
 
-              {/* Phone */}
               <input
                 type="tel"
                 placeholder="Enter Phone Number"
@@ -143,7 +134,6 @@ Location: ${location}`;
                 className="w-full border p-2 rounded mb-3"
               />
 
-              {/* Location */}
               <button
                 onClick={getLocation}
                 className="bg-blue-500 text-white px-4 py-2 rounded mb-3 w-full"
@@ -151,7 +141,6 @@ Location: ${location}`;
                 Share Live Location
               </button>
 
-              {/* Place Order */}
               <button
                 onClick={placeOrder}
                 className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition w-full"
@@ -162,15 +151,7 @@ Location: ${location}`;
           )}
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="mt-auto bg-white py-4 text-center shadow-inner">
-        <p className="text-gray-600">
-          © {new Date().getFullYear()} Hindupur Milk. All Rights Reserved.
-        </p>
-      </footer>
-
-    </div>
+    </>
   );
 }
 
