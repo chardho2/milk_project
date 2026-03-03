@@ -6,14 +6,13 @@ function Header() {
     "hover:underline " + (isActive ? "font-bold text-green-800" : "");
 
   return (
-    <nav className="flex justify-between items-center px-6 py-4 bg-white shadow-md">
+    <nav className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center px-6 py-4 bg-white shadow-md">
       <div className="flex items-center gap-3">
         <img src={logo} alt="Hindupur Milk" className="w-12 h-12 rounded-full" />
         <h1 className="text-xl font-bold text-green-700">Hindupur Milk</h1>
       </div>
 
-      {/* navigation links */}
-      <ul className="flex space-x-6 text-gray-700">
+      <ul className="flex flex-wrap gap-x-6 gap-y-2 text-gray-700">
         <li>
           <NavLink to="/" className={linkClass} end>
             Home
@@ -29,17 +28,22 @@ function Header() {
             Location Tracker
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/seller" className={linkClass}>
-            Seller Portal
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/admin" className={linkClass}>
-            Admin Portal
-          </NavLink>
-        </li>
       </ul>
+
+      <div className="flex gap-2">
+        <NavLink
+          to="/seller"
+          className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-green-700 hover:bg-green-800"
+        >
+          Seller Portal
+        </NavLink>
+        <NavLink
+          to="/admin"
+          className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-indigo-800 hover:bg-indigo-900"
+        >
+          Admin Portal
+        </NavLink>
+      </div>
     </nav>
   );
 }
